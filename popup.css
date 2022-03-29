@@ -1,0 +1,7 @@
+.description {
+  display: none;
+}
+
+.description.disabled {
+  display: block;
+}

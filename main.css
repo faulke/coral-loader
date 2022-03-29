@@ -1,0 +1,16 @@
+.coral-loader #comments-sidebar {
+  display: none;
+}
+
+.coral-loader .coral-indent-1 {
+  margin-left: 48px !important;
+}
+
+.coral-loader .coral-indent-2 {
+  margin-left: 96px !important;
+}
+
+.coral-loader .coral-indent-3 {
+  margin-left: 144px !important;
+}
+  

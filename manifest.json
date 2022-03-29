@@ -1,0 +1,16 @@
+{
+  "name": "Coral Loader",
+  "description": "Extend the functionality of SBNation Coral commenting system.",
+  "version": "1.0",
+  "manifest_version": 3,
+  "background": {
+    "service_worker": "background.js"
+  },
+  "host_permissions": [
+    "*://*/*"
+  ],
+  "permissions": ["storage", "activeTab", "scripting", "tabs", "webNavigation"],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
