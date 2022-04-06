@@ -3,6 +3,16 @@ body {
   padding: 16px;
 }
 
+.title {
+  display: flex;
+  align-items: center;
+}
+
+h1 {
+  padding-left: 8px;
+  margin: 0;
+}
+
 #description {
   display: none;
 }
@@ -17,4 +27,24 @@ body {
 
 #settings.disabled {
   display: none;
+}
+
+a {
+  margin-top: 24px;
+}
+
+.pb1 {
+  padding-bottom: 16px;
+}
+
+.setting {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+}
+
+input {
+  height: 16px;
+  width: 16px;
 }
