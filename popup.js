@@ -1,10 +1,8 @@
-let loader = document.getElementById('loader')
 let wide = document.getElementById('wide')
 let description = document.getElementById('description')
 let settingsElem = document.getElementById('settings')
 
 const inputs = [
-  loader,
   wide
 ]
 
@@ -24,12 +22,7 @@ chrome.storage.sync.get('settings', async ({ settings }) => {
     settingsElem && settingsElem.classList.add('disabled')
   }
 
-  loader.checked = settings.loader
   wide.checked = settings.wide
-})
-
-loader.addEventListener('change', (ev) => {
-  updateSettings('loader', ev.target.checked)
 })
 
 wide.addEventListener('change', (ev) => {

@@ -2,28 +2,18 @@ const settings = {
   loader: false,
   wide: false,
   enabled: true,
-  intervals: {},
   isSbNation: {}
 }
 
-let activeTabId
-let lastTabId
-
-
 // TODO:
-// [x] make sure site is an SBNation site, check elem '.coral-script' exists, disable extension settings
-// [x] make sure comments frame is loaded
-// [x] fire scripts for inital settings
-// [x] on tab change, load settings
-// [] on tab refresh/close, clear interval
-// [] make the popup look nice
+// [] fix on tab refresh/close
+// [] make the popup look nicer
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.sync.set({ settings })
 })
 
 chrome.tabs.onActivated.addListener(async (activeInfo) => {
-  console.log(activeInfo)
   const { settings } = await chrome.storage.sync.get('settings')
   const { tabId } = activeInfo
   const isSbNation = settings.isSbNation[tabId]
@@ -46,15 +36,6 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
     target,
     func: applyCss,
     args: [settings.wide]
-  })
-
-  chrome.scripting.executeScript({
-    target: {
-      tabId,
-      frameIds: [comments.frameId]
-    },
-    func: loadComments,
-    args: [settings.loader, tabId]
   })
 })
 
@@ -82,15 +63,6 @@ chrome.runtime.onMessage.addListener(({ field, setting }, sender, send) => {
       target,
       func: applyCss,
       args: [updated.wide]
-    })
-
-    chrome.scripting.executeScript({
-      target: {
-        tabId: tab.id,
-        frameIds: [comments.frameId]
-      },
-      func: loadComments,
-      args: [updated.loader, tab.id]
     })
   })
 })
@@ -143,15 +115,6 @@ chrome.webNavigation.onCompleted.addListener(async (info) => {
         func: applyCss,
         args: [settings.wide]
       })
-
-      chrome.scripting.executeScript({
-        target: {
-          tabId: tab.id,
-          frameIds: [info.frameId]
-        },
-        func: loadComments,
-        args: [settings.loader, tab.id]
-      })
     })
   }
 })
@@ -165,43 +128,4 @@ const applyCss = (wide) => {
   } else {
     body.classList.remove('coral-loader')
   }
-}
-
-// apply other settings in comments frame
-const loadComments = async (checked, tabId) => {
-  // tabId -> frameId relationship to prevent multiple?
-  const { settings } = await chrome.storage.sync.get('settings')
-  if (!checked) {
-    window.clearInterval(settings.intervals[tabId])
-    const intervals = { ...settings.intervals }
-    delete intervals[tabId]
-    await chrome.storage.sync.set({ settings: { ...settings, intervals } })
-    return
-  }
-
-  if (settings.intervals[tabId]) {
-    return
-  }
-
-  const interval = window.setInterval(() => {
-    const loadMore = document.querySelector('#comments-allComments-viewNewButton')
-    const replies = document.querySelectorAll('[id*="showMoreReplies"]')
-    if (loadMore) {
-      loadMore.click()
-    }
-
-    if (replies.length) {
-      replies.forEach(rep => rep.click())
-    }
-  }, 1000)
-
-  const newSettings = {
-    ...settings,
-    intervals: {
-      ...settings.intervals,
-      [tabId]: interval
-    }
-  }
-
-  await chrome.storage.sync.set({ settings: newSettings })
 }
