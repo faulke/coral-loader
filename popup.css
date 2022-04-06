@@ -1,7 +1,20 @@
-.description {
+body {
+  min-width: 200px;
+  padding: 16px;
+}
+
+#description {
   display: none;
 }
 
-.description.disabled {
+#description.disabled {
   display: block;
+}
+
+#settings {
+  display: block;
+}
+
+#settings.disabled {
+  display: none;
 }
