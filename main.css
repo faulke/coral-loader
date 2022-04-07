@@ -1,5 +1,6 @@
 .coral-loader #comments-sidebar {
-  display: none;
+  display: none !important;
+  width: 0 !important;
 }
 
 .coral-loader .coral-indent-1 {
