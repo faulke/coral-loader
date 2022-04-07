@@ -1,7 +1,7 @@
 {
   "name": "Coral Loader",
   "description": "Extend the functionality of SBNation Coral commenting system.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "manifest_version": 3,
   "background": {
     "service_worker": "background.js"

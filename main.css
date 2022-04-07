@@ -1,6 +1,7 @@
 .coral-loader #comments-sidebar {
   display: none !important;
   max-width: 0 !important;
+  margin: 0 !important;
 }
 
 .coral-loader .coral-indent-1 {
@@ -19,8 +20,12 @@
   margin-left: 192px !important;
 }
 
-.coral-indent {
+.coral-indent:not(.coral-comment-focus) {
   padding-right: 12px !important;
+}
+
+.coral-comment-focus {
+  padding-right: 10px !important;
 }
 
 @media screen and (max-width: 768px) {
