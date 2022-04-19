@@ -1,79 +1,116 @@
-const settings = {
+// TODO:
+// [] on tab refresh/close, remove tab-specific settings from storage
+// [] make the popup look nicer
+// [] load all comments on page open
+// [] auto-load new comments
+// [] when z-ing through comments, scroll selected comment to center of screen
+
+// default storage settings
+const defaultSettings = {
   loader: false,
   wide: false,
   enabled: true,
   isSbNation: {}
 }
 
-// TODO:
-// [] fix on tab refresh/close
-// [] make the popup look nicer
-
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.storage.sync.set({ settings })
+// set default settings
+chrome.runtime.onInstalled.addListener(async () => {
+  await setSettings(defaultSettings)
 })
 
+// new tab activated listener
 chrome.tabs.onActivated.addListener(async (activeInfo) => {
-  const { settings } = await chrome.storage.sync.get('settings')
+  const settings = await getSettings()
   const { tabId } = activeInfo
+
+  // check isSbNation site
   const isSbNation = settings.isSbNation[tabId]
   if (!isSbNation) {
     return
   }
 
-  const frames = await chrome.webNavigation.getAllFrames({ tabId })
-  const comments = frames.find(x => x.url.includes('comments.'))
-  if (!comments) {
-    return
-  }
-
   const target = {
     tabId,
-    frameIds: [0, comments.frameId]
+    frameIds: [0]
   }
+
+  // add/remove loader class based on settings
+  chrome.scripting.executeScript({
+    target,
+    func: applyLoaderCls,
+    args: [settings.wide]
+  })
 
   chrome.scripting.executeScript({
     target,
-    func: applyCss,
+    func: applyThreadStyle,
     args: [settings.wide]
   })
 })
 
-chrome.runtime.onMessage.addListener(({ field, setting }, sender, send) => {
+// popup settings changed listener
+chrome.runtime.onMessage.addListener(async ({ field, setting }, sender, send) => {
   send('ack')
-  chrome.storage.sync.get('settings', async ({ settings }) => {
-    const updated = { ...settings, [field]: setting }
-    chrome.storage.sync.set({ settings: updated });
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
-    if (!tab) {
-      return
-    }
 
-    const frames = await chrome.webNavigation.getAllFrames({ tabId: tab.id })
-    const comments = frames.find(x => x.url.includes('comments.'))
-    if (!comments) {
-      return
-    }
-    const target = {
-      tabId: tab.id,
-      frameIds: [0, comments.frameId]
-    }
+  // first, update settings
+  const settings = await getSettings()
+  const updated = { ...settings, [field]: setting }
+  await setSettings(updated)
 
-    chrome.scripting.executeScript({
-      target,
-      func: applyCss,
-      args: [updated.wide]
-    })
+  // get current active tab
+  const [tab] = await getActiveTab()
+  if (!tab) {
+    return
+  }
+
+  const target = {
+    tabId: tab.id,
+    frameIds: [0]
+  }
+
+  // add/remove loader class based on settings
+  chrome.scripting.executeScript({
+    target,
+    func: applyLoaderCls,
+    args: [updated.wide]
+  })
+
+  chrome.scripting.executeScript({
+    target,
+    func: applyThreadStyle,
+    args: [updated.wide]
   })
 })
 
+// on comments web request completed (comment loaded)
+chrome.webRequest.onCompleted.addListener(async (request) => {
+  const { tabId } = request
+  const settings = await getSettings()
+
+  chrome.scripting.executeScript({
+    target: {
+      tabId,
+      frameIds: [0]
+    },
+    args: [settings.wide],
+    func: applyThreadStyle
+  })
+}, {
+  urls: ['https://*/api/graphql*']
+})
+
+// on page load
 chrome.webNavigation.onCompleted.addListener(async (info) => {
+  // default frame has loaded, frameId === 0
+  // check if site is SbNation
   if (info.frameId === 0) {
-    chrome.scripting.executeScript({
-      target: {
-        tabId: info.tabId,
-        frameIds: [0]
-      },
+    const target = {
+      tabId: info.tabId,
+      frameIds: [0]
+    }
+
+    const result = await chrome.scripting.executeScript({
+      target,
       args: [info.tabId],
       func: async (tabId) => {
         const isSbNation = !!document.getElementById('coral_thread')
@@ -86,46 +123,83 @@ chrome.webNavigation.onCompleted.addListener(async (info) => {
           }
         }
         await chrome.storage.sync.set({ settings: newSettings })
+        return isSbNation
       }
     })
-  }
-  if (info.url.includes('comments.')) {
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
-    if (!tab) {
-      return
-    }
-    
-    const target = {
-      tabId: tab.id,
-      frameIds: [0, info.frameId]
-    }
-  
-    try {
-      await chrome.scripting.insertCSS({
-        files: ['main.css'],
-        target
-      })
-    } catch (error) {
-      console.error(error)
-    }
 
-    chrome.storage.sync.get('settings', ({ settings }) => {
+    if (result[0].result) {
+      const settings = await getSettings()
+      try {
+        await chrome.scripting.insertCSS({
+          files: ['main.css'],
+          target
+        })
+      } catch (error) {
+        console.error(error)
+      }
+  
       chrome.scripting.executeScript({
         target,
-        func: applyCss,
+        func: applyLoaderCls,
         args: [settings.wide]
       })
-    })
+
+      // don't need to apply thread settings until web request completed
+    }
   }
 })
 
 
-// apply classes in both frames
-const applyCss = (wide) => {
+// helpers
+const getActiveTab = () => chrome.tabs.query({ active: true, currentWindow: true })
+
+const getSettings = async () => {
+  const { settings } = await chrome.storage.sync.get('settings')
+  return settings
+}
+
+const setSettings = async (settings) => {
+  await chrome.storage.sync.set({ settings })
+}
+
+const applyLoaderCls = (wide) => {
   const body = document.querySelector('body')
   if (wide) {
     body.classList.add('coral-loader')
   } else {
     body.classList.remove('coral-loader')
   }
+}
+
+const applyThreadStyle = (wide) => {
+  const coral = document.querySelector('#coral_thread div')
+  if (!coral) {
+    return
+  }
+
+  const shadowRoot = coral.shadowRoot
+  if (!shadowRoot) {
+    return
+  }
+
+  const styleId = 'coral-loader'
+  const loaderStyle = shadowRoot.querySelector(`#${styleId}`)
+  if (!wide && !loaderStyle) {
+    return
+  }
+
+  if (!wide && loaderStyle) {
+    loaderStyle.remove()
+    return
+  }
+
+  if (wide && loaderStyle) {
+    return
+  }
+
+  // apply indents to threads
+  let style = document.createElement('style')
+  style.id = styleId
+  shadowRoot.appendChild(style)
+  style.innerText = '.coral-indent-1 { margin-left: 48px !important; }'
 }
