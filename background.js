@@ -201,5 +201,10 @@ const applyThreadStyle = (wide) => {
   let style = document.createElement('style')
   style.id = styleId
   shadowRoot.appendChild(style)
-  style.innerText = '.coral-indent-1 { margin-left: 48px !important; }'
+  style.innerText = `
+    .coral-indent-1 { margin-left: 36px !important; }
+    .coral-indent-2 { margin-left: 72px !important; }
+    .coral-indent-3 { margin-left: 108px !important; }
+    .coral-indent-4 { margin-left: 144px !important; }
+  `
 }
