@@ -1,42 +1,5 @@
 .coral-loader #comments-sidebar {
-  display: none;
+  display: none !important;
+  max-width: 0 !important;
+  margin: 0 !important;
 }
-
-.coral-loader .coral-indent-1 {
-  margin-left: 48px !important;
-}
-
-.coral-loader .coral-indent-2 {
-  margin-left: 96px !important;
-}
-
-.coral-loader .coral-indent-3 {
-  margin-left: 144px !important;
-}
-
-.coral-loader .coral-indent-4 {
-  margin-left: 192px !important;
-}
-
-.coral-indent {
-  padding-right: 12px !important;
-}
-
-@media screen and (max-width: 768px) {
-  .coral-loader .coral-indent-1 {
-    margin-left: 24px !important;
-  }
-  
-  .coral-loader .coral-indent-2 {
-    margin-left: 48px !important;
-  }
-  
-  .coral-loader .coral-indent-3 {
-    margin-left: 72px !important;
-  }
-  
-  .coral-loader .coral-indent-4 {
-    margin-left: 96px !important;
-  }
-}
-  
