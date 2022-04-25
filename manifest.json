@@ -12,7 +12,7 @@
   "host_permissions": [
     "*://*/*"
   ],
-  "permissions": ["storage", "scripting", "tabs", "webNavigation", "webRequest"],
+  "permissions": ["storage", "scripting", "webNavigation", "webRequest"],
   "action": {
     "default_popup": "popup.html"
   }
