@@ -1,4 +1,7 @@
 # coral-loader
+
+![Chrome Web Store](https://img.shields.io/chrome-web-store/users/fiomjcpnnmiapdalgaglkhlgmpmdanhh?style=flat-square)
+
 A Chrome extension to improve the experience of Vox Media's Coral commenting system on SBNation sites.
 
 Install from Chrome Web Store:
