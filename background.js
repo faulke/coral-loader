@@ -1,7 +1,7 @@
 // TODO:
 // [] on tab refresh/close, remove tab-specific settings from storage
 // [] make the popup look nicer
-// [] load all comments on page open
+// [] load all comments on page open - click all "Show All" buttons
 // [] auto-load new comments
 // [] when z-ing through comments, scroll selected comment to center of screen
 
@@ -202,9 +202,12 @@ const applyThreadStyle = (wide) => {
   style.id = styleId
   shadowRoot.appendChild(style)
   style.innerText = `
-    .coral-indent-1 { margin-left: 36px !important; }
-    .coral-indent-2 { margin-left: 72px !important; }
-    .coral-indent-3 { margin-left: 108px !important; }
-    .coral-indent-4 { margin-left: 144px !important; }
+    .coral-indent-1 { margin-left: calc(2*18px) !important; }
+    .coral-indent-2 { margin-left: calc(4*18px) !important; }
+    .coral-indent-3 { margin-left: calc(6*18px) !important; }
+    .coral-indent-4 { margin-left: calc(8*18px) !important; }
+    .coral-indent-5 { margin-left: calc(10*18px) !important; }
+    .coral-indent-6 { margin-left: calc(12*18px) !important; }
+    div[class*="Indent-level7"] { margin-left: calc(14*18px) !important; }
   `
 }
