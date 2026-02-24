@@ -1,0 +1,28 @@
+/* DARK MODE */
+.coral-enhancer-dark {
+  --main-bg-color: #202124;
+  --lighter-bg-color: #2d2f33;
+  --x-lighter-bg-color: #35363b;
+  --main-text-color: #a4a9b0;
+  --lighter-text-color: #bdc1c6;
+  --darker-text-color: #969ba1;
+  --link-color: var(--coral-comp-coral-primaryText-color);
+
+  background: var(--main-bg-color) !important;
+  margin: 0 -16px !important;
+  padding: 0 16px !important;
+}
+
+/* WIDE MODE */
+body.coral-enhancer-wide .duet--layout--rail {
+  display: none !important;
+}
+
+body.coral-enhancer-wide .duet--layout--entry-body {
+  width: 100% !important;
+  max-width: none !important;
+}
+
+body.coral-enhancer-dark main#content > .duet--layout--entry-body-container {
+  background: var(--lighter-bg-color) !important;
+}

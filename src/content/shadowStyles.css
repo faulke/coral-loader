@@ -1,0 +1,133 @@
+/* WIDE MODE: INDENTATION FIXES FOR CORAL COMMENTS */
+.coral-enhancer-wide .coral-indent-1 {
+  margin-left: calc(2 * 18px) !important;
+}
+
+.coral-enhancer-wide .coral-indent-2 {
+  margin-left: calc(4 * 18px) !important;
+}
+
+.coral-enhancer-wide .coral-indent-3 {
+  margin-left: calc(6 * 18px) !important;
+}
+
+.coral-enhancer-wide .coral-indent-4 {
+  margin-left: calc(8 * 18px) !important;
+}
+
+.coral-enhancer-wide .coral-indent-5 {
+  margin-left: calc(10 * 18px) !important;
+}
+
+.coral-enhancer-wide .coral-indent-6 {
+  margin-left: calc(12 * 18px) !important;
+}
+
+.coral-enhancer-wide div[class*="Indent-level7"] {
+  margin-left: calc(14 * 18px) !important;
+}
+
+/* DARK MODE */
+.coral-enhancer-dark {
+  --main-bg-color: #202124;
+  --lighter-bg-color: #2d2f33;
+  --x-lighter-bg-color: #35363b;
+  --main-text-color: #a4a9b0;
+  --lighter-text-color: #bdc1c6;
+  --darker-text-color: #969ba1;
+  --link-color: var(--coral-comp-coral-primaryText-color);
+
+  background: var(--main-bg-color) !important;
+  margin: 0 -16px !important;
+  padding: 0 16px !important;
+}
+
+.coral-enhancer-dark main.coral-stream,
+.coral-enhancer-dark .coral-guidelines,
+.coral-enhancer-dark #post-comment-form,
+.coral-enhancer-dark .coral-viewersWatching div,
+.coral-enhancer-dark .coral-sortMenu select {
+  background: var(--main-bg-color) !important;
+  color: var(--main-text-color) !important;
+}
+
+.coral-enhancer-dark .coral-tabBar-tab {
+  border-color: var(--palette-grey-300) !important;
+}
+
+.coral-enhancer-dark .coral-sortMenu label {
+  color: var(--main-text-color) !important;
+}
+
+.coral-enhancer-dark .coral-viewersWatching span {
+  border-color: var(--link-color) !important;
+  color: var(--main-text-color) !important;
+}
+
+.coral-enhancer-dark .coral-viewerBox-username,
+.coral-enhancer-dark h1,
+.coral-enhancer-dark h2,
+.coral-enhancer-dark h3 {
+  color: var(--lighter-text-color) !important;
+}
+
+.coral-enhancer-dark .coral-comment-username span {
+  color: var(--lighter-text-color) !important;
+}
+
+.coral-enhancer-dark .coral-comment-timestamp,
+.coral-enhancer-dark .coral-comment-inReplyToText {
+  color: var(--darker-text-color) !important;
+}
+
+.coral-enhancer-dark .coral-comment-content > div,
+.coral-enhancer-dark .coral-comment-inReplyToUsername,
+.coral-enhancer-dark .coral-myComment,
+.coral-enhancer-dark .coral-discussions-header,
+.coral-enhancer-dark .coral-emailNotifications {
+  color: var(--main-text-color) !important;
+}
+
+.coral-enhancer-dark .coral-comment-notSeen,
+.coral-enhancer-dark button[disabled],
+.coral-enhancer-dark .coral-comment-collapse-toggle {
+  background: #2d2f33 !important;
+  border-color: #2d2f33 !important;
+}
+
+.coral-enhancer-dark .coral-comment-content a,
+.coral-enhancer-dark .coral-comment button {
+  color: var(--link-color) !important;
+  border-color: var(--link-color) !important;
+}
+
+.coral-enhancer-dark .coral-guidelines a {
+  color: var(--link-color) !important;
+}
+
+.coral-enhancer-dark blockquote {
+  background: var(--x-lighter-bg-color) !important;
+}
+
+.coral-enhancer-dark button {
+  color: var(--link-color) !important;
+}
+
+/* AUTO REFRESH */
+.coral-enhancer-auto-refresh #comments-allComments-viewNewButton {
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  opacity: 0 !important;
+  overflow: hidden !important;
+  border: none !important;
+}
+
+.coral-enhancer-auto-refresh #comments-allComments-log div[class*=AllCommentsTabContainer-refreshContainer-] {
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  opacity: 0 !important;
+  overflow: hidden !important;
+  border: none !important;
+}
