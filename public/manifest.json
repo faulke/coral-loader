@@ -10,7 +10,7 @@
     "128": "coral128.png"
   },
   "host_permissions": ["*://*/*"],
-  "permissions": ["storage", "scripting"],
+  "permissions": ["storage"],
   "action": {
     "default_popup": "index.html"
   },
