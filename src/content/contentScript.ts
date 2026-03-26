@@ -4,6 +4,9 @@ import injectedStyles from './styles.css?inline'; // We'll rely on Vite string i
 import shadowStyles from './shadowStyles.css?inline';
 
 let isSupported = false;
+let autoRefreshObserver: MutationObserver | null = null;
+let currentAutoRefreshInterval = 5;
+let autoRefreshTimeoutId: number | null = null;
 
 function checkSupport() {
   const root = document.querySelector(CONFIG.selectors.rootSelector);
@@ -72,25 +75,27 @@ function applyFeatures(features: {
     }
   }
 
-  if (features.autoRefreshInterval !== undefined) {
-    currentAutoRefreshInterval = features.autoRefreshInterval;
+  // Auto Refresh
+  const { autoRefreshEnabled, autoRefreshInterval } = features;
+  const intervalChanged = autoRefreshInterval !== undefined && autoRefreshInterval !== currentAutoRefreshInterval;
+
+  if (autoRefreshInterval !== undefined) {
+    currentAutoRefreshInterval = autoRefreshInterval;
   }
 
-  // Auto Refresh
-  if (features.autoRefreshEnabled !== undefined) {
-    if (features.autoRefreshEnabled) {
-      container.classList.add(CONFIG.classes.autoRefresh);
-      startAutoRefreshObserver();
-    } else {
-      container.classList.remove(CONFIG.classes.autoRefresh);
-      stopAutoRefreshObserver();
-    }
+  // Determine if we should be enabled: use provided value or fallback to current state
+  const isEnabled = autoRefreshEnabled !== undefined 
+    ? autoRefreshEnabled 
+    : container.classList.contains(CONFIG.classes.autoRefresh);
+
+  if (isEnabled) {
+    container.classList.add(CONFIG.classes.autoRefresh);
+    startAutoRefreshObserver(intervalChanged);
+  } else {
+    container.classList.remove(CONFIG.classes.autoRefresh);
+    stopAutoRefreshObserver();
   }
 }
-
-let autoRefreshObserver: MutationObserver | null = null;
-let currentAutoRefreshInterval = 5;
-let autoRefreshTimeoutId: number | null = null;
 
 function clickRefreshButtons() {
   const shadowHost = document.querySelector(
@@ -146,8 +151,13 @@ function checkAndSchedule() {
   }
 }
 
-function startAutoRefreshObserver() {
-  if (autoRefreshObserver) return;
+function startAutoRefreshObserver(reset = false) {
+  if (autoRefreshObserver && !reset) {
+    return;
+  };
+  if (reset) {
+    stopAutoRefreshObserver();
+  }
   const shadowHost = document.querySelector(
     CONFIG.selectors.rootSelector,
   ) as HTMLElement;
@@ -193,7 +203,7 @@ function initExtension() {
   if (!hasInitialized) {
     hasInitialized = true;
     console.info(
-      '[Coral Loader] Initialization conditions met, injecting styles.',
+      '[Coral Loader] Initialization conditions met.',
     );
   }
 
