@@ -2,7 +2,7 @@
   "name": "coral-loader",
   "private": true,
   "description": "Chrome extension to enhance the Coral comment system",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
